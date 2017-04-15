@@ -12,8 +12,11 @@ class ViewController: UIViewController {
 
     var currentValue=50
     var thumbImage :UIImage=#imageLiteral(resourceName: "SliderThumb-Normal")
+    var thumbImageHigh :UIImage=#imageLiteral(resourceName: "SliderThumb-Highlighted")
     var leftImage:UIImage=#imageLiteral(resourceName: "SliderTrackLeft")
     var RightImage:UIImage=#imageLiteral(resourceName: "SliderTrackRight")
+    
+    
 
     @IBOutlet var mySlider : UISlider!
     @IBOutlet var myTargetLabel :UILabel!
@@ -24,9 +27,12 @@ class ViewController: UIViewController {
     var score=0
     override func viewDidLoad() {
         super.viewDidLoad()
+        let ResizableLeft=leftImage.resizableImage(withCapInsets: UIEdgeInsets(top:8 ,left:8 , bottom:8,right:8))
+        let ResizableRight=RightImage.resizableImage(withCapInsets: UIEdgeInsets(top:8 ,left:8 , bottom:8,right:8))
         mySlider.setThumbImage(thumbImage, for: UIControlState.normal)
-        mySlider.setMaximumTrackImage(RightImage, for: UIControlState.normal )
-        mySlider.setMinimumTrackImage(leftImage, for: UIControlState.normal )
+        mySlider.setThumbImage(thumbImageHigh, for: UIControlState.highlighted)
+        mySlider.setMaximumTrackImage(ResizableRight, for: UIControlState.normal )
+        mySlider.setMinimumTrackImage(ResizableLeft, for: UIControlState.normal )
         StartNewRound()
         UpdateUI()
         
