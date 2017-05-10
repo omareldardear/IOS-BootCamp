@@ -101,8 +101,14 @@ class SearchViewController: UIViewController {
   
   // Called when the Download button for a track is tapped
   func startDownload(_ track: Track) {
-
-
+    let download = Download(url: track.previewURL)
+    download.task = defaultSession.downloadTask(with: track.previewURL) { location, response, error in
+      self.saveDownload(download: download, location: location, response: response, error: error)
+    }
+    download.task!.resume()
+    download.isDownloading = true
+    activeDownloads[download.url] = download
+    
 
     
   }
@@ -132,6 +138,19 @@ class SearchViewController: UIViewController {
 	
   // Called when the Pause button for a track is tapped
   func pauseDownload(_ track: Track) {
+    
+    guard let download = activeDownloads[track.previewURL] else { return }
+    download.task!.cancel(byProducingResumeData: { (data) in
+      download.resumeData = data
+    })
+    
+    download.isDownloading = false
+    
+    if let index = trackIndex(for: download.task!) {
+      DispatchQueue.main.async {
+        self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .none)
+      }
+    }
 		
 
 
